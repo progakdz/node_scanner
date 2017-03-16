@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace node_scanner
 {
@@ -23,6 +25,32 @@ namespace node_scanner
         public MainWindow()
         {
             InitializeComponent();
+
+            Window1 w1 = new Window1();
+            w1.Show();
+
+            update();
+        }
+
+        DBClass db = new DBClass();
+
+        public void update()
+        {
+            var myData = db.getState().Select();
+            for (int i = 1; i < myData.Length; i++)
+            {
+                for (int j = 0; j < myData[i].ItemArray.Length; j++)
+                {
+                    richtextbox1.AppendText(myData[i].ItemArray[j] + " ");
+                }
+                richtextbox1.AppendText("\n");
+                
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            update();
         }
     }
 }
