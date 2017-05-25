@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MySql.Data.MySqlClient;
+using System.Threading;
 using System.Data;
 
 namespace node_scanner
@@ -29,10 +30,19 @@ namespace node_scanner
             Window1 w1 = new Window1();
             w1.Show();
 
-            update();
+            refresh();
         }
-
+        bool autoRefresh = true;
         DBClass db = new DBClass();
+
+        private void refresh()
+        {
+            while (autoRefresh)
+            {
+                update();
+                Thread.Sleep(2000);
+            }
+        }
 
         public void update()
         {
@@ -50,7 +60,22 @@ namespace node_scanner
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            update();
+            if(autoRefresh) { autoRefresh = false; } else { autoRefresh = true; }
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void button_Click_1(object sender, RoutedEventArgs e)
+        {
+            db.setState(textBox.Text, System.Convert.ToInt32(textBox1.Text));
         }
     }
 }
